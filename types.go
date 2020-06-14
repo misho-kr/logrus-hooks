@@ -1,10 +1,10 @@
 // Package hooks provides several useful Logrus hooks
 //
-// These hooks are used as proxies to other hooks and provide enhanced
+// These hooks are used as decorators of other hooks and provide enhanced
 // functionality:
 //
-//	- rate limits on the number of logging messages
 //	- retry transmission with exponential backoff and jitter
+//	- rate limits on the number of logging messages
 //	- asynchronous execution
 //
 package hooks
