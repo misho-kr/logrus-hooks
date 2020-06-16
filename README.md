@@ -1,9 +1,9 @@
 Logrus Hooks
 ============
 
-[Logrus](https://github.com/sirupsen/logrus) is a popular structured logger. One of its many useful features is the option to add hooks that are invoked for every logging message.
+[Logrus](https://github.com/sirupsen/logrus) is a popular structured logger. One of its many useful features is the option to add hooks that are invoked for every logging message. Hooks can be used to send logging message to remote tracking and reporting system.
 
-Hooks can be used to send logging message to remote tracking and reporting system. Things can go wrong when talking to remote systems, like delays and errors. The hooks from this module provide means to deal with:
+Things can go wrong when talking to remote systems, like delays and errors. The hooks from this module provide means to deal with:
 
 * Transient errors
 * Excessive logging messages
@@ -11,7 +11,7 @@ Hooks can be used to send logging message to remote tracking and reporting syste
 
 ### Setup
 
-To send messages to _syslog_ the setup is easy:
+To send messages to _syslog_ the setup looks like this:
 
 ```go
 import (
@@ -50,4 +50,10 @@ log.AddHook(RetryHook(
 Put a cap on the number of logging messages per time interval
 
 ```go
+log.AddHook(RateLimitHook(
+	hook,
+	hooks.PerSecond(10),     // 10 messages per second
+	hooks.Burst(20),         // burst of 20 messages allowed
+))
+
 ```
