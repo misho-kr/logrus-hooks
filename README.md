@@ -55,5 +55,16 @@ log.AddHook(RateLimitHook(
 	hooks.PerSecond(10),     // 10 messages per second
 	hooks.Burst(20),         // burst of 20 messages allowed
 ))
+```
 
+### Asynchronous execution
+
+Fire the hook in separate goroutine to avoid blocking the logger and main application
+
+```go
+log.AddHook(AsyncHook(
+	hook,
+	hooks.Senders(10),       // 10 goroutines to send messages
+	hooks.BoostSenders(20),  // up to 20 additional goroutines when needed 
+))
 ```

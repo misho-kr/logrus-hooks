@@ -23,9 +23,12 @@ type Chain interface {
 type RunningHook interface {
 	logrus.Hook
 
-	// Start prepares the hook to be able to send alerts
+	// IsRunning queries the state of the hook
+	IsRunning() bool
+
+	// Start prepares the hook to be able to send messages
 	Start() error
 
-	// Stop transitions the hook to a state in which it does not send alerts
+	// Stop transitions the hook to a state in which it does not send messages
 	Stop() error
 }
