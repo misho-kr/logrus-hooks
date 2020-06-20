@@ -12,7 +12,7 @@ const (
 	defaultBurst         = 3
 )
 
-// retryHook is a Logrus hook inserted in a chain of hooks to limit the rate of logging
+// retryHook is a Logrus hook that enforces a rate limit on the logged messages
 type rareLimitHook struct {
 	ChainImpl
 	limiter *rate.Limiter
@@ -25,20 +25,24 @@ type rateLimit struct {
 
 // constructor --------------------------------------------------------
 
+// RateLimitOption is a functional option to update the rate limit hook configuration
 type RateLimitOption func(conf *rateLimit)
 
+// PerSecond sets the maximum number of messages that can be logged per second
 func PerSecond(n int) RateLimitOption {
 	return func(conf *rateLimit) {
 		conf.limitPeSecond = n
 	}
 }
 
+// Burst sets the maximum number of messages that can be logged per second in a burst
 func Burst(n int) RateLimitOption {
 	return func(conf *rateLimit) {
 		conf.burst = n
 	}
 }
 
+// RateLimitHook creates a Logrus hook that enforces a rate limit on the logged messages
 func RateLimitHook(next logrus.Hook, opts ...RateLimitOption) logrus.Hook {
 
 	// default configuration
@@ -70,7 +74,7 @@ func RateLimitHook(next logrus.Hook, opts ...RateLimitOption) logrus.Hook {
 // Fire makes multiple attempts to deliver the message to the next hook
 func (h *rareLimitHook) Fire(entry *logrus.Entry) error {
 
-	if ! h.limiter.Allow() {
+	if !h.limiter.Allow() {
 		return fmt.Errorf("rate limit [%f/sec, burst=%d] exceeded",
 			h.limiter.Limit(), h.limiter.Burst())
 	}

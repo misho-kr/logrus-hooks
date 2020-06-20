@@ -18,7 +18,7 @@ func TestRateLimit(t *testing.T) {
 			PerSecond(ratePerSecond),
 		)
 
-		for i:=0; i<ratePerSecond; i++ {
+		for i := 0; i < ratePerSecond; i++ {
 			if hook.Fire(nil) != nil {
 				fmt.Errorf("hook was limited [rate=%d/sec] too early: %d", ratePerSecond, i)
 			}
@@ -42,7 +42,7 @@ func TestBurst(t *testing.T) {
 			Burst(td),
 		)
 
-		for i:=0; i<td; i++ {
+		for i := 0; i < td; i++ {
 			if hook.Fire(nil) != nil {
 				fmt.Errorf("hook was limited [burst=%d/sec] too early: %d", td, i)
 			}

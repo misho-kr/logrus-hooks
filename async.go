@@ -65,6 +65,7 @@ type asyncParams struct {
 
 // constructor --------------------------------------------------------
 
+// AsyncOption is a functional option to update the async hook configuration
 type AsyncOption func(conf *asyncParams)
 
 // Senders sets the number of senders goroutines of the new hook
@@ -88,6 +89,7 @@ func BufferLen(n uint32) AsyncOption {
 	}
 }
 
+// AsyncHook creates a Logrus hook that uses goroutines to invoke the next hook
 func AsyncHook(next logrus.Hook, opts ...AsyncOption) logrus.Hook {
 
 	hook := &asyncHook{

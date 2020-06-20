@@ -138,8 +138,8 @@ func TestAsync_Fire(t *testing.T) {
 
 	var mockHook mockRecordingHook
 
-	nSenders := uint32(1+ nTests/10)
-	hook := AsyncHook(&mockHook, Senders(nSenders), BoostSenders(uint32(nTests) - nSenders))
+	nSenders := uint32(1 + nTests/10)
+	hook := AsyncHook(&mockHook, Senders(nSenders), BoostSenders(uint32(nTests)-nSenders))
 
 	theHook, ok := hook.(*asyncHook)
 	if !ok {

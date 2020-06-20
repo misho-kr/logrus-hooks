@@ -41,7 +41,7 @@ type backoff struct {
 	maxRetries int
 }
 
-// retryHook is a Logrus hook inserted in a chain of hooks to add retry capability
+// retryHook is a Logrus hook that that will try to log a message multiple times
 type retryHook struct {
 	ChainImpl
 	backoff
@@ -49,20 +49,24 @@ type retryHook struct {
 
 // constructor --------------------------------------------------------
 
+// RetryOption is a functional option to update the retry hook configuration
 type RetryOption func(conf *backoff)
 
+// FactorPct sets the increase (in percents of the delay) that will be added to the delay after each retry
 func FactorPct(n int64) RetryOption {
 	return func(conf *backoff) {
 		conf.factorPct = n
 	}
 }
 
+// JitterPct sets a random delay (in percents of the delay) that will be added to each retry
 func JitterPct(n int64) RetryOption {
 	return func(conf *backoff) {
 		conf.jitterPct = n
 	}
 }
 
+// Retries sets the maximum number of retries
 func Retries(n int) RetryOption {
 	return func(conf *backoff) {
 		if n >= 0 {
@@ -71,6 +75,7 @@ func Retries(n int) RetryOption {
 	}
 }
 
+// RetryHook creates a Logrus hook that will try to log a message multiple times
 func RetryHook(next logrus.Hook, delay time.Duration, opts ...RetryOption) logrus.Hook {
 
 	hook := &retryHook{
