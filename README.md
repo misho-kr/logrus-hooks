@@ -1,9 +1,9 @@
 Logrus Hooks
 ============
 
-[Logrus](https://github.com/sirupsen/logrus) is a popular structured logger. One of its many useful features is the option to add hooks that are invoked for every logging message. Hooks can be used to send logging message to remote tracking and reporting system.
+[Logrus](https://github.com/sirupsen/logrus) is a popular structured logger that allows to add hooks that are invoked for every message. These hooks can be used to send the messages to remote tracking and reporting system. Things may go wrong when talking to remote systems, like delays and errors.
 
-Things can go wrong when talking to remote systems, like delays and errors. The hooks from this module provide means to deal with:
+The hooks from this package are [decorators](https://en.wikipedia.org/wiki/Decorator_pattern) that help to deal with:
 
 * Transient errors
 * Excessive logging messages
@@ -11,7 +11,7 @@ Things can go wrong when talking to remote systems, like delays and errors. The 
 
 ### Setup
 
-To send messages to _syslog_ the setup looks like this:
+The examples will use the [syslog hook](https://github.com/sirupsen/logrus/tree/master/hooks/syslog) to send messages to _syslog_ daemon. The setup looks like this:
 
 ```go
 import (
