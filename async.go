@@ -21,13 +21,16 @@ const (
 )
 
 var (
-	errBufferFull error
-	errNotRunning error
+	// ErrBufferFull is returned by `Fire` when the async hook can not take any more messages
+	ErrBufferFull error
+
+	// ErrNotRunning is returned when `Fire` is called before the async hook is started
+	ErrNotRunning error
 )
 
 func init() {
-	errBufferFull = errors.New("logrus hook failed to send message, buffer is full")
-	errNotRunning = errors.New("logrus hook can not send message before it is started")
+	ErrBufferFull = errors.New("logrus hook failed to send message, buffer is full")
+	ErrNotRunning = errors.New("logrus hook can not send message before it is started")
 }
 
 // asyncHook is a Logrus hook uses goroutines to invoke the next hook
@@ -123,7 +126,7 @@ func (h *asyncHook) Fire(entry *logrus.Entry) error {
 	defer h.Unlock()
 
 	if !h.isRunning() {
-		return errNotRunning
+		return ErrNotRunning
 	}
 
 	select {
@@ -202,7 +205,7 @@ func (h *asyncHook) worker() {
 func (h *asyncHook) boostAndWork(entry *logrus.Entry) error {
 	nBoostSenders := atomic.LoadUint32(&h.nBoostSenders)
 	if nBoostSenders >= h.conf.numBoostSenders {
-		return errBufferFull
+		return ErrBufferFull
 	}
 
 	atomic.AddUint32(&h.nBoostSenders, 1)

@@ -70,10 +70,9 @@ func TestAsync_boostAndWork_full(t *testing.T) {
 		testMessage := logrus.NewEntry(logrus.StandardLogger())
 		testMessage.Message = fmt.Sprintf("test message: %d", i)
 
-		err := theHook.boostAndWork(testMessage)
-		if err == nil {
+		if err := theHook.boostAndWork(testMessage); err == nil {
 			t.Errorf("boost-and-work did not fail at round: %d", i)
-		} else if err != errBufferFull {
+		} else if err != ErrBufferFull {
 			t.Errorf("unexpected error from boost-and-work at round [%d]: %s", i, err)
 		}
 	}
@@ -116,8 +115,7 @@ func TestAsync_boostAndWork(t *testing.T) {
 			testMessage := logrus.NewEntry(logrus.StandardLogger())
 			testMessage.Message = fmt.Sprintf("test message: %d", j)
 
-			err := theHook.boostAndWork(testMessage)
-			if err != nil {
+			if err := theHook.boostAndWork(testMessage); err != nil {
 				t.Errorf("boost-and-work failed at round [%d/%d]: %s", j, i, err)
 			} else {
 				sentMessages = append(sentMessages, testMessage)
@@ -156,8 +154,7 @@ func TestAsync_Fire(t *testing.T) {
 		testMessage := logrus.NewEntry(logrus.StandardLogger())
 		testMessage.Message = fmt.Sprintf("test message: %d", i)
 
-		err := hook.Fire(testMessage)
-		if err != nil {
+		if err := hook.Fire(testMessage); err != nil {
 			t.Errorf("boost-and-work failed at round [%d]: %s", i, err)
 		} else {
 			sentMessages = append(sentMessages, testMessage)
@@ -169,4 +166,52 @@ func TestAsync_Fire(t *testing.T) {
 	}
 
 	mockHook.compare(t, sentMessages)
+}
+
+func TestAsync_Buffer(t *testing.T) {
+
+	testData := []uint32{
+		1, 10, 25, 50, 100,
+	}
+
+	for _, td := range testData {
+		var mockHook mockRecordingHook
+		hook := AsyncHook(&mockHook, Senders(0), BoostSenders(0), BufferLen(td))
+
+		theHook, ok := hook.(*asyncHook)
+		if !ok {
+			t.Fatalf("test hook is not of the expected asyncHook type: %v", hook)
+		}
+
+		if err := theHook.Start(); err != nil {
+			t.Fatalf("failed to start the async hook: %s", err)
+		}
+
+		t.Run(fmt.Sprintf("length=%d", td), func(t *testing.T) {
+
+			testMessage := logrus.NewEntry(logrus.StandardLogger())
+			testMessage.Message = fmt.Sprintf("test message: %d times", td)
+
+			// fire N messages
+			for i := uint32(0); i < td; i++ {
+				if err := hook.Fire(testMessage); err != nil {
+					t.Errorf("fire failed at round [%d]: %s", i, err)
+				}
+				if mockHook.len(t) != 0 {
+					t.Fatalf("message was delivered at round [%d], should've bee queued up", i)
+				}
+			}
+
+			// fire 1 more message
+			if err := hook.Fire(testMessage); err == nil {
+				t.Errorf("fire did not fail at round [%d]", td+1)
+			} else if err != ErrBufferFull {
+				t.Errorf("fire failed at round [%d] with unexpected error: %s", td+1, err)
+			}
+		})
+
+		if err := theHook.Stop(); err != nil {
+			t.Fatalf("failed to stop the async hook: %s", err)
+		}
+	}
 }

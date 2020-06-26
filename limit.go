@@ -2,6 +2,7 @@ package hooks
 
 import (
 	"fmt"
+
 	"github.com/sirupsen/logrus"
 	"golang.org/x/time/rate"
 )
@@ -9,7 +10,7 @@ import (
 const (
 	// default rate limits, completely arbitrary
 	defaultRatePerSecond = 10
-	defaultBurst         = 3
+	defaultBurst         = 1
 )
 
 // retryHook is a Logrus hook that enforces a rate limit on the logged messages

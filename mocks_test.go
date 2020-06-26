@@ -39,7 +39,7 @@ func (mock *mockRecordingHook) Fire(entry *logrus.Entry) error {
 }
 
 // compare reports discrepancies between messages in maps passed as arguments
-func (mock *mockRecordingHook) len(t *testing.T) int {
+func (mock *mockRecordingHook) len(*testing.T) int {
 	nReceived := 0
 	mock.messages.Range(func(key, _ interface{}) bool {
 		nReceived++
@@ -50,7 +50,7 @@ func (mock *mockRecordingHook) len(t *testing.T) int {
 }
 
 // resets empties the buffer of received messages
-func (mock *mockRecordingHook) reset(t *testing.T) {
+func (mock *mockRecordingHook) reset(*testing.T) {
 	mock.messages = sync.Map{}
 }
 
