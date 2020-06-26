@@ -1,5 +1,5 @@
-Logrus Hooks
-============
+Smart Logrus Hooks
+==================
 
 [Logrus](https://github.com/sirupsen/logrus) is a popular structured logger that allows to add hooks that are invoked for every message. These hooks can be used to send the messages to remote tracking and reporting system. Things may go wrong when talking to remote systems, like delays and errors.
 
