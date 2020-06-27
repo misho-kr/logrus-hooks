@@ -1,0 +1,15 @@
+os: linux
+language: go
+
+branches:
+  only:
+    - master
+#    - develop
+
+go:
+  - "1.14.x"
+
+script: make travis
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
