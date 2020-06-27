@@ -8,7 +8,7 @@ GOLINT	?= golint
 
 COVERAGE           ?= no
 COVERAGE_OPTION    ?= text
-COVERAGE_REPORTS   ?= $(SRC)/test-coverage-report
+COVERAGE_REPORTS   ?= $(SRC)/coverage-report
 
 GOFMT_OPTIONS  	   ?= -l
 GOFMT_REPORT_LINES ?= 10
@@ -21,42 +21,51 @@ ifeq ($(VERBOSE), yes)
   VERBOSE_FLAG := -v
 endif
 
-GOFMT_REPORT 	?= $(GOFMT_REPORTS).$(BUILD_DATETIME_TAG).txt
-COVERAGE_REPORT ?= $(COVERAGE_REPORTS).$(BUILD_DATETIME_TAG).txt
+BUILD_DATETIME  := $(shell date +"%Y%m%d-%H%M%S")
+
+GOFMT_REPORT 	?= $(GOFMT_REPORTS).$(BUILD_DATETIME).txt
+COVERAGE_REPORT ?= $(COVERAGE_REPORTS).$(BUILD_DATETIME).txt
 
 # ---------------------------------------------------------------------
 
-.PHONY: all pr
+.PHONY: all pr travis codecov
 .PHONY: clean build test cover vet lint format
+.PHONY:	show_coverage doc
 
-all: test build
+all: vet test build
 pr:  format lint vet build coverage
+
+travis: all codecov
 
 # ---------------------------------------------------------------------
 
 build:
-	$(call announce,Go $@)
+	$(call announce,go $@)
 	@$(GO_CMD) build $(VERBOSE_FLAG) ./...
 
 test:
-	$(call announce,Go $@)
+	$(call announce,go $@)
 	@$(GO_CMD) test $(VERBOSE_FLAG) ./...
 
 coverage:
-	$(call announce,Go $@ -> $(COVERAGE_REPORT))
+	$(call announce,go $@ -> $(COVERAGE_REPORT))
 	@$(GO_CMD) test -coverprofile=$(COVERAGE_REPORT) ./...
 	@$(GO_CMD) tool cover -func="$(COVERAGE_REPORT)"
 
+codecov:
+	$(call announce,go $@)
+	@$(GO_CMD) test -coverprofile=coverage.txt -race -covermode=atomic
+
 vet:
-	$(call announce,Go $@)
+	$(call announce,go $@)
 	@$(GO_CMD) vet $(VERBOSE_FLAG) ./...
 
 lint:
-	$(call announce,Go $@)
+	$(call announce,go $@)
 	@$(GOLINT) -set_exit_status ./...
 
 format:
-	$(call announce,Go $@)
+	$(call announce,go $@)
 	@$(GOFMT) $(GOFMT_OPTIONS) . > $(GOFMT_REPORT)
 	@if [ -s "$(GOFMT_REPORT)" ]; then \
 		if [ "$(GOFMT_OPTIONS)" = "-l" ]; then \
@@ -75,13 +84,11 @@ format:
 	fi
 
 clean:
-	$(call announce,Go $@)
-	@rm -f $(GOFMT_REPORTS).* $(COVERAGE_REPORTS).*
+	$(call announce,go $@)
+	@rm -f $(GOFMT_REPORTS).* $(COVERAGE_REPORTS).* coverage.txt
 	@$(GO_CMD) clean $(GOCLEAN_OPTION)
 
 # misc targets --------------------------------------------------------
-
-.PHONY:	show_coverage
 
 show_coverage:
 ifeq ($(COVERAGE_FORMAT), html)
@@ -89,6 +96,9 @@ ifeq ($(COVERAGE_FORMAT), html)
 else
 	@$(GO_CMD) tool cover -func="$(COVERAGE_REPORT)"
 endif
+
+doc:
+	godoc -http=:8080 -index
 
 # ---------------------------------------------------------------------
 
