@@ -1,27 +1,24 @@
 package hooks
 
 import (
-	"fmt"
 	"sync"
 	"testing"
 
 	"github.com/sirupsen/logrus"
 )
 
-// mockRetryHook is simplest hook that fails N times and then always succeeds
-type mockRetryHook struct {
-	ChainImpl
-	numOfFailures, maxFailures int
+// mockCannedHook is a simple hook that always returns the same canned results
+type mockCannedHook struct {
+	levels     []logrus.Level
+	fireResult error
 }
 
-func (mock *mockRetryHook) Fire(entry *logrus.Entry) error {
-	if mock.numOfFailures == mock.maxFailures {
-		return nil
-	}
+func (mock *mockCannedHook) Levels() []logrus.Level {
+	return mock.levels
+}
 
-	mock.numOfFailures++
-
-	return fmt.Errorf("mock hook error [%d/%d]", mock.numOfFailures, mock.maxFailures)
+func (mock *mockCannedHook) Fire(entry *logrus.Entry) error {
+	return mock.fireResult
 }
 
 // mockRecordingHook is hook that keeps all messages it has received

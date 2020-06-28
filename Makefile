@@ -28,14 +28,13 @@ COVERAGE_REPORT ?= $(COVERAGE_REPORTS).$(BUILD_DATETIME).txt
 
 # ---------------------------------------------------------------------
 
-.PHONY: all pr travis codecov
-.PHONY: clean build test cover vet lint format
+.PHONY: dev all travis
+.PHONY: clean build test codecov coverage vet lint format
 .PHONY:	show_coverage doc
 
-all: vet test build
-pr:  format lint vet build coverage
-
-travis: all codecov
+dev: 	vet test build
+all:  	format lint vet build coverage
+travis: format lint vet build codecov
 
 # ---------------------------------------------------------------------
 
@@ -105,7 +104,3 @@ doc:
 define announce
   @echo "# $(1)"; echo
 endef
-
-# ---------------------------------------------------------------------
-# eof
-#

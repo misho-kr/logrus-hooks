@@ -1,9 +1,28 @@
 package hooks
 
 import (
+	"fmt"
 	"testing"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
+
+// mockRetryHook is simplest hook that fails N times and then always succeeds
+type mockRetryHook struct {
+	ChainImpl
+	numOfFailures, maxFailures int
+}
+
+func (mock *mockRetryHook) Fire(entry *logrus.Entry) error {
+	if mock.numOfFailures == mock.maxFailures {
+		return nil
+	}
+
+	mock.numOfFailures++
+
+	return fmt.Errorf("mock hook error [%d/%d]", mock.numOfFailures, mock.maxFailures)
+}
 
 func TestIncrDelay(t *testing.T) {
 	testData := []struct {

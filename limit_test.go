@@ -16,7 +16,7 @@ func TestRateLimit(t *testing.T) {
 	for _, td := range testData {
 		ratePerSecond := int(td)
 		hook := RateLimitHook(
-			&mockRetryHook{},
+			&mockCannedHook{},
 			PerSecond(ratePerSecond),
 		)
 
@@ -44,7 +44,7 @@ func TestBurst(t *testing.T) {
 
 	for _, td := range testData {
 		hook := RateLimitHook(
-			&mockRetryHook{},
+			&mockCannedHook{},
 			PerSecond(1),
 			Burst(td),
 		)

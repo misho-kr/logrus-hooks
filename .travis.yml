@@ -9,6 +9,9 @@ branches:
 go:
   - "1.14.x"
 
+install:
+  - go get -u golang.org/x/lint/golint
+
 script: make travis
 
 after_success:
