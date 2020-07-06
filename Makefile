@@ -6,6 +6,12 @@ GO_CMD	?= go
 GOFMT	?= gofmt
 GOLINT	?= golint
 
+CGO 	?=
+
+ifneq ($(CGO),)
+  GO_CMD := CGO_ENABLED=$(CGO) $(GO_CMD) 
+endif
+
 COVERAGE           ?= no
 COVERAGE_OPTION    ?= text
 COVERAGE_REPORTS   ?= $(SRC)/coverage-report
