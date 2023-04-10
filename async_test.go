@@ -18,7 +18,7 @@ func TestAsyncHook_Send(t *testing.T) {
 	if !ok {
 		t.Fatalf("test hook is not of the expected asyncHook type: %v", hook)
 	}
-	if err := theHook.Start(); err != nil {
+	if err := hook.Start(); err != nil {
 		t.Fatalf("failed to start the async hook: %s", err)
 	}
 
@@ -37,7 +37,7 @@ func TestAsyncHook_Send(t *testing.T) {
 		}
 	}
 
-	if err := theHook.Stop(); err != nil {
+	if err := hook.Stop(); err != nil {
 		t.Fatalf("failed to stop the async hook: %s", err)
 	}
 
@@ -60,7 +60,7 @@ func TestAsync_boostAndWork_full(t *testing.T) {
 	if !ok {
 		t.Fatalf("test hook is not of the expected asyncHook type: %v", hook)
 	}
-	if err := theHook.Start(); err != nil {
+	if err := hook.Start(); err != nil {
 		t.Fatalf("failed to start the async hook: %s", err)
 	}
 
@@ -77,7 +77,7 @@ func TestAsync_boostAndWork_full(t *testing.T) {
 		}
 	}
 
-	if err := theHook.Stop(); err != nil {
+	if err := hook.Stop(); err != nil {
 		t.Fatalf("failed to stop the async hook: %s", err)
 	}
 
@@ -102,7 +102,7 @@ func TestAsync_boostAndWork(t *testing.T) {
 		// set the number of booster workers
 		theHook.conf.numBoostSenders = uint32(i)
 
-		if err := theHook.Start(); err != nil {
+		if err := hook.Start(); err != nil {
 			t.Fatalf("failed to start the async hook at round [%d]: %s", i, err)
 		}
 
@@ -122,7 +122,7 @@ func TestAsync_boostAndWork(t *testing.T) {
 			}
 		}
 
-		if err := theHook.Stop(); err != nil {
+		if err := hook.Stop(); err != nil {
 			t.Fatalf("failed to stop the async hook at round [%d]: %s", i, err)
 		}
 
@@ -139,12 +139,7 @@ func TestAsync_Fire(t *testing.T) {
 	nSenders := uint32(1 + nTests/10)
 	hook := AsyncHook(&mockHook, Senders(nSenders), BoostSenders(uint32(nTests)-nSenders))
 
-	theHook, ok := hook.(*asyncHook)
-	if !ok {
-		t.Fatalf("test hook is not of the expected asyncHook type: %v", hook)
-	}
-
-	if err := theHook.Start(); err != nil {
+	if err := hook.Start(); err != nil {
 		t.Fatalf("failed to start the async hook: %s", err)
 	}
 
@@ -161,7 +156,7 @@ func TestAsync_Fire(t *testing.T) {
 		}
 	}
 
-	if err := theHook.Stop(); err != nil {
+	if err := hook.Stop(); err != nil {
 		t.Fatalf("failed to stop the async hook: %s", err)
 	}
 
@@ -178,12 +173,7 @@ func TestAsync_Buffer(t *testing.T) {
 		var mockHook mockRecordingHook
 		hook := AsyncHook(&mockHook, Senders(0), BoostSenders(0), BufferLen(td))
 
-		theHook, ok := hook.(*asyncHook)
-		if !ok {
-			t.Fatalf("test hook is not of the expected asyncHook type: %v", hook)
-		}
-
-		if err := theHook.Start(); err != nil {
+		if err := hook.Start(); err != nil {
 			t.Fatalf("failed to start the async hook: %s", err)
 		}
 
@@ -198,7 +188,7 @@ func TestAsync_Buffer(t *testing.T) {
 					t.Errorf("fire failed at round [%d]: %s", i, err)
 				}
 				if mockHook.len(t) != 0 {
-					t.Fatalf("message was delivered at round [%d], should've bee queued up", i)
+					t.Fatalf("message was delivered at round [%d], should've been queued up", i)
 				}
 			}
 
@@ -210,7 +200,7 @@ func TestAsync_Buffer(t *testing.T) {
 			}
 		})
 
-		if err := theHook.Stop(); err != nil {
+		if err := hook.Stop(); err != nil {
 			t.Fatalf("failed to stop the async hook: %s", err)
 		}
 	}
