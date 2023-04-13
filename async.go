@@ -93,7 +93,7 @@ func BufferLen(n uint32) AsyncOption {
 }
 
 // AsyncHook creates a Logrus hook that uses goroutines to invoke the next hook
-func AsyncHook(next logrus.Hook, opts ...AsyncOption) logrus.Hook {
+func AsyncHook(next logrus.Hook, opts ...AsyncOption) RunningHook {
 
 	hook := &asyncHook{
 		ChainImpl: ChainImpl{

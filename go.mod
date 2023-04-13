@@ -1,8 +1,10 @@
-module github.com/misho-kr/logrus-hooks
+module logrus-hooks.git
 
-go 1.14
+go 1.17
 
 require (
-	github.com/sirupsen/logrus v1.6.0
-	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1
+	github.com/sirupsen/logrus v1.9.0
+	golang.org/x/time v0.3.0
 )
+
+require golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
