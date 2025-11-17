@@ -1,0 +1,31 @@
+name: Go Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24.x'
+
+    - name: Install dependencies
+      run: go get -u golang.org/x/lint/golint
+
+    - name: Run checks and build
+      run: make travis
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} # Storing the token as a secret is recommended
+        files: ./coverage.txt
+        verbose: true

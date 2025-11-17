@@ -3,10 +3,9 @@
 // These hooks are used as decorators of other hooks and provide enhanced
 // functionality:
 //
-//	- retry transmission with exponential backoff and jitter
-//	- rate limits on the number of logging messages
-//	- asynchronous execution
-//
+// - retry transmission with exponential backoff and jitter
+// - rate limits on the number of logging messages
+// - asynchronous execution
 package hooks
 
 import "github.com/sirupsen/logrus"

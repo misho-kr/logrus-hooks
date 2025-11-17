@@ -39,8 +39,10 @@ COVERAGE_REPORT ?= $(COVERAGE_REPORTS).$(BUILD_DATETIME).txt
 .PHONY:	show_coverage doc
 
 dev: 	vet test build
-all:  	format lint vet build coverage
-travis: format lint vet build codecov
+all:  format lint vet build
+ci:  	all coverage
+github: all codecov
+travis: all codecov
 
 # ---------------------------------------------------------------------
 
