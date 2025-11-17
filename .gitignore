@@ -1,20 +1,28 @@
 # Binaries for programs and plugins
 *.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-
-# Test binary, built with `go test -c`
 *.test
+*.prof
 
-# Output of the go coverage tool, specifically when used with LiteIDE
+# Output of the go coverage tool
 *.out
-coverage-report.*
-coverage.txt
 
-# Dependency directories (remove the comment below to include it)
-vendor/
+# Dependency directories (remove the comment below if you wish to ignore the vendor directory)
+# vendor/
 
-# Project files
+# Go workspace file
+go.work
+
+# IDEs and editors
 .idea/
+.vscode/
+
+# Operating System files
+.DS_Store
+
+# Build outputs from Makefile
+coverage.txt
+coverage-report*
+gofmt-report*
+
+# Local environment variables
+.env
