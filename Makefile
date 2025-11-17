@@ -4,7 +4,6 @@ SRC	?= $(PWD)
 
 GO_CMD	?= go
 GOFMT	?= gofmt
-GOLINT	?= golint
 
 CGO 	?=
 
@@ -38,9 +37,11 @@ COVERAGE_REPORT ?= $(COVERAGE_REPORTS).$(BUILD_DATETIME).txt
 .PHONY: clean build test codecov coverage vet lint format
 .PHONY:	show_coverage doc
 
-dev: 	vet test build
-all:  	format lint vet build coverage
-travis: format lint vet build codecov
+dev: 	vet build test
+all:  format dev
+ci:  	all coverage
+github: all codecov
+travis: all codecov
 
 # ---------------------------------------------------------------------
 
@@ -64,10 +65,6 @@ codecov:
 vet:
 	$(call announce,go $@)
 	@$(GO_CMD) vet $(VERBOSE_FLAG) ./...
-
-lint:
-	$(call announce,go $@)
-	@$(GOLINT) -set_exit_status ./...
 
 format:
 	$(call announce,go $@)

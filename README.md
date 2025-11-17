@@ -1,7 +1,7 @@
 Smart Logrus Hooks
 ==================
 
-[![GoDoc](https://godoc.org/github.com/misho-kr/logrus-hooks?status.svg)](https://godoc.org/github.com/misho-kr/logrus-hooks) [![Build Status](https://travis-ci.org/misho-kr/logrus-hooks.svg?branch=master)](https://travis-ci.org/misho-kr/logrus-hooks) [![codecov](https://codecov.io/gh/misho-kr/logrus-hooks/branch/master/graph/badge.svg)](https://codecov.io/gh/misho-kr/logrus-hooks)
+[![GoDoc](https://godoc.org/github.com/misho-kr/logrus-hooks?status.svg)](https://godoc.org/github.com/misho-kr/logrus-hooks) [![Go Build](https://github.com/misho-kr/logrus-hooks/actions/workflows/go.yml/badge.svg)](https://github.com/misho-kr/logrus-hooks/actions/workflows/go.yml) [![codecov](https://codecov.io/gh/misho-kr/logrus-hooks/branch/master/graph/badge.svg)](https://codecov.io/gh/misho-kr/logrus-hooks)
 
 [Logrus](https://github.com/sirupsen/logrus) is a popular structured logger that allows to add hooks that are invoked for every message. These hooks can be used to send the messages to remote tracking and reporting system. Things may go wrong when talking to remote systems, like delays and errors.
 
